@@ -1,0 +1,41 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `LisaaSuoritus`(
+IN En VARCHAR(45),
+IN Sn VARCHAR(45),
+IN KK VARCHAR(45),
+IN Arvos INT
+)
+Aliohjelma:BEGIN -- Aliohjelma on LOOP-label,LEAVE:lla poistutaan
+
+declare OpiskID INT DEFAULT 0;
+declare OpjaksoID INT DEFAULT 0;
+
+SELECT idOpiskelija INTO OpiskID FROM Opiskelija WHERE Etunimi=En AND Sukunimi=Sn;
+SELECT idOpintojakso INTO OpjaksoID FROM opintojakso WHERE Koodi=KK;
+
+IF OpiskID=0 then 
+     SELECT 'Opiskelijaa ei ole'; -- TUlostetaan viesti käyttäjälle
+     LEAVE Aliohjelma;
+END IF;
+
+IF OpiskID=0 then 
+     SELECT 'Opiskelijaa ei ole'; 
+     LEAVE Aliohjelma;
+END IF;
+IF OpjaksoID=0 then 
+     SELECT 'Opintojaksoa ei ole';
+     LEAVE Aliohjelma;
+END IF;
+
+Tarkista, että muuttuja Arvos on välillä 0 - 5
+IF Arvos >5 then
+     SELECT 'Anna oikea numero väliltä 0 - 5';
+     LEAVE Aliohjelma;
+     elseif Arvos < 0 then
+     SELECT 'Anna oikea numero väliltä 0 - 5';
+     LEAVE Aliohjelma;
+END IF;
+
+
+INSERT INTO Arviointi VALUES(NULL,CURDATE(),Arvos,OpiskID,OpjaksoID);
+
+END
